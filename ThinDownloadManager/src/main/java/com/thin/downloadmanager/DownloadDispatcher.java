@@ -352,6 +352,11 @@ class DownloadDispatcher extends Thread {
 
         if (transferEncoding == null) {
             mContentLength = getHeaderFieldLong(conn, "Content-Length", -1);
+            /* Workaround fix for when thindownloadmanager doesn't identify Content-Length response header.
+            client will not receive progress update because of this workaround*/
+            if (mContentLength == -1) {
+                mContentLength = 1;
+            }
         } else {
             Log.v("Ignoring Content-Length since Transfer-Encoding is also defined for Downloaded Id " + request.getDownloadId());
         }
